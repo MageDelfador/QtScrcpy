@@ -559,19 +559,6 @@ void VideoForm::staysOnTop(bool top)
 void VideoForm::mousePressEvent(QMouseEvent *event)
 {
     auto device = qsc::IDeviceManage::getInstance().getDevice(m_serial);
-    if (event->button() == Qt::MiddleButton) {
-        if (device && !device->isCurrentCustomKeymap()) {
-            device->postGoHome();
-            return;
-        }
-    }
-
-    if (event->button() == Qt::RightButton) {
-        if (device && !device->isCurrentCustomKeymap()) {
-            device->postGoBack();
-            return;
-        }
-    }
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         QPointF localPos = event->localPos();
@@ -667,16 +654,6 @@ void VideoForm::mouseMoveEvent(QMouseEvent *event)
 void VideoForm::mouseDoubleClickEvent(QMouseEvent *event)
 {
     auto device = qsc::IDeviceManage::getInstance().getDevice(m_serial);
-    if (event->button() == Qt::LeftButton && !m_videoWidget->geometry().contains(event->pos())) {
-        if (!isMaximized()) {
-            removeBlackRect();
-        }
-		return;
-    }
-
-    if (event->button() == Qt::RightButton && device && !device->isCurrentCustomKeymap()) {
-        emit device->postBackOrScreenOn(event->type() == QEvent::MouseButtonPress);
-    }
 
     if (m_videoWidget->geometry().contains(event->pos())) {
         if (!device) {
