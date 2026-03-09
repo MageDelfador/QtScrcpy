@@ -671,6 +671,7 @@ void VideoForm::mouseDoubleClickEvent(QMouseEvent *event)
         if (!isMaximized()) {
             removeBlackRect();
         }
+		return;
     }
 
     if (event->button() == Qt::RightButton && device && !device->isCurrentCustomKeymap()) {
@@ -689,8 +690,17 @@ void VideoForm::mouseDoubleClickEvent(QMouseEvent *event)
         QPointF globalPos = event->globalPosition();
 #endif
         QPointF mappedPos = m_videoWidget->mapFrom(this, localPos.toPoint());
-        QMouseEvent newEvent(event->type(), mappedPos, globalPos, event->button(), event->buttons(), event->modifiers());
-        emit device->mouseEvent(&newEvent, m_videoWidget->frameSize(), m_videoWidget->size());
+        QMouseEvent pressEvent(
+            QEvent::MouseButtonPress,
+            mappedPos,
+            globalPos,
+            event->button(),
+            event->buttons(),
+            event->modifiers()
+        );
+        emit device->mouseEvent(&pressEvent, m_videoWidget->frameSize(), m_videoWidget->size());
+
+        return;
     }
 }
 
